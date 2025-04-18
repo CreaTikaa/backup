@@ -1,28 +1,6 @@
-## Serv Web : 
+# Plan de Sauvegarde
 
-```
-sudo apt install apache2 -y
-```
-
-```
-sudo apt install mariadb-server -y
-sudo mysql_secure_installation
-Set password et yes a quasi tout le reste (comme je veux)
-```
-
-```
-sudo apt install php libapache2-mod-php php-mysql php-cli php-curl php-gd php-mbstring php-xml php-zip -y
-```
-
-```
-sudo systemctl restart apache2
-```
-
-```
-echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
-```
-
-#### sqldump :  
+### Sauvegarde de la base de donnée avec mysqldump :   
 
 ::: info
 Dans : /usr/local/bin/mysqldump-all.sh 
@@ -56,7 +34,7 @@ password=TON_MDP_ROOT
 chmod 600 /root/.my.cnf
 ```
 
-#### borgbackup : 
+### Configuration de borgBackup : 
 
 ```
 sudo apt install borgbackup -y
@@ -73,7 +51,7 @@ echo "ma_passphrase" > /root/.borg_pass_daily ou autre
 chmod 600 /root/.borg_pass_daily ou autre
 ```
 
-#### Borgmatic : 
+### Configuration de Borgmatic : 
 
 ```bash
 sudo apt update
@@ -153,7 +131,7 @@ check_last: 3
 sudo borgmatic config validate
 ```
 
-#### Services : 
+### Configuration des Services : 
 
 ::: info
 sudo nano /etc/systemd/system/borgmatic-daily.service
@@ -191,7 +169,7 @@ ExecStartPost=find /var/backups/mariadb -mtime +5 -delete
 ExecStart=/root/.local/bin/borgmatic --config /etc/borgmatic/intranet_weekly.yaml
 ```
 
-#### Timer : 
+### Configuration des Timer : 
 
 ::: info
 sudo nano /etc/systemd/system/borgmatic-daily.timer
@@ -235,7 +213,7 @@ sudo systemctl enable --now borgmatic-daily.timer
 sudo systemctl enable --now borgmatic-weekly.timer
 ```
 
-### restore_intranet.sh
+### Restauration des backup avec `restore_intranet.sh` : 
 
 ```bash
 #!/bin/bash
@@ -314,20 +292,14 @@ else
 fi
 ```
 
-# Pour Windows : 
+Lancement du script : 
+```
+./restore_intranet.sh
+```
 
-::: info
-Téléchargement Restic zip pour Windows
+## Configuration pour Windows : 
 
-Unzip et ajout au path (pas la peine de .exe juste le path ou est le .exe)
-
-Se co en ssh crea@192.168.56.2
-
-sudo apt-get install restic
-
-:::
-
-Aller dans les bons paths et :  
+--> Sur le serveur de backup : 
 
 ```
 restic -r /backup/secretaire/daily init
@@ -338,12 +310,9 @@ restic -r /backup/gdrive/daily init
 restic -r /backup/gdrive/weekly init
 ```
 
-::: warn
-Mettre tout les scripts dans un dossier /restic/backup/ pour que ce soit propre
+Mettre tout les scripts dans un dossier /restic/backup/ pour que ce soit propre.
 
-:::
-
-# restic_env.ps1
+### Définition de l'environnement : 
 
 ```
 # restic_env.ps1
@@ -430,9 +399,9 @@ restic backup --files-from-verbatim "C:\restic\backup\comptabilite_include.txt"
 restic forget --keep-weekly 4 --prune
 ```
 
-## Planification via Task Scheduler
+### Planification via Task Scheduler : 
 
-### 🗓️ Tâche 1 : Daily
+#### Daily : 
 
 - Nom : Restic Daily Backup Secretaire/Autocad/Compta/gdrive
 - Déclencheur : tous les jours à 03:00
@@ -441,14 +410,15 @@ restic forget --keep-weekly 4 --prune
   - Arguments : -ExecutionPolicy Bypass -File "C:\\restic\\backup-daily.ps1"
 - Options :
   - Coche : “Exécuter avec les autorisations maximales”
-  - Déclenche même si utilisateur non connecté
+  - Coche : Déclenche même si utilisateur non connecté
 
 ::: success
-Edit le nom du script et le time en fonction
+
+--> Modifier le nom du script et l'heure en fonction des paramètres voulus.
 
 :::
 
-#### restore_backup.ps1 
+#### Restauration des backup avec `restore_backup.ps1` :
 
 ```powershell
 $profile = Read-Host "Quel profil veux-tu restaurer ? (secretaire/autocad/comptabilite)"
