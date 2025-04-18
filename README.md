@@ -510,3 +510,8 @@ Write-Host "Restauration en cours depuis '$repoType', snapshot $selected..." -Fo
 Write-Host ""
 Write-Host "Restauration terminée dans : $restoreTarget" -ForegroundColor Green
 ```
+
+Lancer le script de réupération : 
+```
+powershell -ExecutionPolicy Bypass -File restore_backup.ps1
+```
