@@ -18,7 +18,7 @@ mysqldump --all-databases --single-transaction --quick --lock-tables=false > "$D
 
 chmod 600 "$DUMP_FILE"
 ```
-Dans : /root/.my.cnf
+Dans : `/root/.my.cnf`
 
 ```bash
 [client]
