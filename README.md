@@ -2,10 +2,7 @@
 
 ### Sauvegarde de la base de donnée avec mysqldump :   
 
-::: info
 Dans : /usr/local/bin/mysqldump-all.sh 
-
-:::
 
 ```bash
 
@@ -21,11 +18,7 @@ mysqldump --all-databases --single-transaction --quick --lock-tables=false > "$D
 
 chmod 600 "$DUMP_FILE"
 ```
-
-::: info
 Dans : /root/.my.cnf
-
-:::
 
 ```bash
 [client]
@@ -133,10 +126,7 @@ sudo borgmatic config validate
 
 ### Configuration des Services : 
 
-::: info
 sudo nano /etc/systemd/system/borgmatic-daily.service
-
-:::
 
 ```
 [Unit]
@@ -151,10 +141,7 @@ ExecStartPost=find /var/backups/mariadb -mtime +5 -delete
 ExecStart=/root/.local/bin/borgmatic --config /etc/borgmatic/intranet_daily.yaml
 ```
 
-::: info
 et sudo nano /etc/systemd/system/borgmatic-weekly.service
-
-:::
 
 ```
 [Unit]
@@ -171,10 +158,7 @@ ExecStart=/root/.local/bin/borgmatic --config /etc/borgmatic/intranet_weekly.yam
 
 ### Configuration des Timer : 
 
-::: info
 sudo nano /etc/systemd/system/borgmatic-daily.timer
-
-:::
 
 ```
 [Unit]
@@ -188,10 +172,7 @@ Persistent=true
 WantedBy=timers.target
 ```
 
-::: info
 sudo nano /etc/systemd/system/borgmatic-weekly.timer
-
-:::
 
 ```
 [Unit]
@@ -327,15 +308,9 @@ $env:RESTIC_KEY_HINT = ""
 $env:RESTIC_CACHE_DIR = "$env:LOCALAPPDATA\restic-cache"
 ```
 
-::: info
 Différents scripts de save, juste a changer la last line pour passer de daily a weekly ou l'inverse :  (et oui tout est chiffré en AES et la clé c'est le mdp)
 
-:::
-
-::: warn
 include.txt pour chacuns : 
-
-:::
 
 ```
 # Secrétaire
@@ -383,10 +358,7 @@ restic backup --files-from-verbatim "C:\restic\backup\autocad_include.txt"
 restic forget --keep-weekly 4 --prune
 ```
 
-::: warn
  Possible de changer le cache pour les weekly pour faire moins de dédupliquement : $env:RESTIC_CACHE_DIR = "$env:LOCALAPPDATA\\restic-cache-weekly"
-
-:::
 
 ```
 # Comptabilité Weekly
@@ -412,11 +384,7 @@ restic forget --keep-weekly 4 --prune
   - Coche : “Exécuter avec les autorisations maximales”
   - Coche : Déclenche même si utilisateur non connecté
 
-::: success
-
 --> Modifier le nom du script et l'heure en fonction des paramètres voulus.
-
-:::
 
 #### Restauration des backup avec `restore_backup.ps1` :
 
