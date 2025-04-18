@@ -29,7 +29,7 @@ Dans : /usr/local/bin/mysqldump-all.sh
 
 :::
 
-```
+```bash
 
 #!/bin/bash
 
@@ -49,7 +49,7 @@ Dans : /root/.my.cnf
 
 :::
 
-```
+```bash
 [client]
 user=root
 password=TON_MDP_ROOT
@@ -451,7 +451,7 @@ Edit le nom du script et le time en fonction
 
 #### restore_backup.ps1 
 
-```
+```powershell
 # Sélection du profil
 $profile = Read-Host "Quel profil veux-tu restaurer ? (secretaire/autocad/comptabilite)"
 if ($profile -ne "secretaire") {
