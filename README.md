@@ -246,7 +246,7 @@ REMOTE_HOST="192.168.56.105"
 REMOTE_BASE_PATH="/home/crea/backup/intranet"
 LOCAL_RESTORE_DIR="$HOME/restore_test"
 
-# Choix du type de backup
+# Daily ou Weekly
 echo "Quel type de backup voulez-vous restaurer ?"
 select backup_type in "daily" "weekly" "Quitter"; do
   case $backup_type in
@@ -268,14 +268,14 @@ select backup_type in "daily" "weekly" "Quitter"; do
   esac
 done
 
-# Définition du chemin du dépôt
+# Path du repo
 REPO="ssh://${REMOTE_USER}@${REMOTE_HOST}${REMOTE_BASE_PATH}/${REPO_NAME}"
 export BORG_REPO="$REPO"
 
-# Facultatif : éviter la demande de passphrase si tu utilises une clé ssh protégée
+/!\ NE PAS METTRE MOT DE PASSE EN CLAIR
  export BORG_PASSPHRASE="mdp"
 
-# Lister les archives disponibles
+
 echo "Voici les archives disponibles dans le dépôt $REPO_NAME :"
 mapfile -t archives < <(borg list --short "$REPO")
 if [[ ${#archives[@]} -eq 0 ]]; then
@@ -298,7 +298,6 @@ if [[ -z "$selected_archive" ]]; then
   exit 1
 fi
 
-# Restaurer l’archive sélectionnée
 echo
 echo "Restauration de l'archive : $selected_archive"
 echo "Destination : $LOCAL_RESTORE_DIR"
@@ -452,21 +451,20 @@ Edit le nom du script et le time en fonction
 #### restore_backup.ps1 
 
 ```powershell
-# Sélection du profil
 $profile = Read-Host "Quel profil veux-tu restaurer ? (secretaire/autocad/comptabilite)"
 if ($profile -ne "secretaire") {
     Write-Host "La restauration automatique est disponible uniquement pour 'secretaire'." -ForegroundColor Red
     exit 1
 }
 
-# Choix du type de sauvegarde
+# Daily ou Weekly
 $repoType = Read-Host "Quelle sauvegarde veux-tu restaurer ? (daily/weekly)"
 if ($repoType -ne "daily" -and $repoType -ne "weekly") {
     Write-Host "Choix invalide. Abandon." -ForegroundColor Red
     exit 1
 }
 
-# Définir les variables d’environnement
+# Variable d'env
 $env:RESTIC_REPOSITORY = "sftp:crea@192.168.56.105:/home/crea/backup/secretaire/$repoType"
 $env:RESTIC_PASSWORD = "mdp"
 
@@ -485,14 +483,12 @@ if (-not $snapshots -or $snapshots.Count -eq 0) {
     exit 1
 }
 
-# Affichage numéroté
 $i = 1
 foreach ($snap in $snapshots) {
     Write-Host "[$i] $($snap.short_id) - $($snap.time) - $($snap.hostname) - $($snap.paths -join ', ')"
     $i++
 }
 
-# Choix du snapshot
 $choice = Read-Host "`nQuel snapshot veux-tu restaurer ? (1 à $($snapshots.Count))"
 if ($choice -notmatch '^\d+$' -or [int]$choice -lt 1 -or [int]$choice -gt $snapshots.Count) {
     Write-Host "Choix invalide." -ForegroundColor Red
@@ -501,7 +497,6 @@ if ($choice -notmatch '^\d+$' -or [int]$choice -lt 1 -or [int]$choice -gt $snaps
 
 $selected = $snapshots[([int]$choice - 1)].short_id
 
-# Dossier de restauration
 $restoreTarget = Read-Host "Dans quel dossier veux-tu restaurer ? (ex: C:\Restaurations\restic)"
 if (-not (Test-Path $restoreTarget)) {
     New-Item -ItemType Directory -Path $restoreTarget -Force | Out-Null
