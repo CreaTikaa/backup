@@ -1,8 +1,8 @@
 # Plan de Sauvegarde
 
-### Sauvegarde de la base de donnée avec mysqldump :   
+### Sauvegarde de la base de donnée avec `mysqldump` :   
 
-Dans : /usr/local/bin/mysqldump-all.sh 
+Dans : `/usr/local/bin/mysqldump-all.sh`
 
 ```bash
 
@@ -126,7 +126,7 @@ sudo borgmatic config validate
 
 ### Configuration des Services : 
 
-sudo nano /etc/systemd/system/borgmatic-daily.service
+Avec : `sudo nano /etc/systemd/system/borgmatic-daily.service`
 
 ```
 [Unit]
@@ -141,7 +141,7 @@ ExecStartPost=find /var/backups/mariadb -mtime +5 -delete
 ExecStart=/root/.local/bin/borgmatic --config /etc/borgmatic/intranet_daily.yaml
 ```
 
-et sudo nano /etc/systemd/system/borgmatic-weekly.service
+Avec : `sudo nano /etc/systemd/system/borgmatic-weekly.service`
 
 ```
 [Unit]
@@ -158,7 +158,7 @@ ExecStart=/root/.local/bin/borgmatic --config /etc/borgmatic/intranet_weekly.yam
 
 ### Configuration des Timer : 
 
-sudo nano /etc/systemd/system/borgmatic-daily.timer
+Avec : `sudo nano /etc/systemd/system/borgmatic-daily.timer`
 
 ```
 [Unit]
@@ -172,7 +172,7 @@ Persistent=true
 WantedBy=timers.target
 ```
 
-sudo nano /etc/systemd/system/borgmatic-weekly.timer
+Avec : `sudo nano /etc/systemd/system/borgmatic-weekly.timer`
 
 ```
 [Unit]
@@ -291,7 +291,7 @@ restic -r /backup/gdrive/daily init
 restic -r /backup/gdrive/weekly init
 ```
 
-Mettre tout les scripts dans un dossier /restic/backup/ pour que ce soit propre.
+Mettre tout les scripts dans un dossier `/restic/backup/` pour que ce soit propre.
 
 ### Définition de l'environnement : 
 
@@ -358,7 +358,7 @@ restic backup --files-from-verbatim "C:\restic\backup\autocad_include.txt"
 restic forget --keep-weekly 4 --prune
 ```
 
- Possible de changer le cache pour les weekly pour faire moins de dédupliquement : $env:RESTIC_CACHE_DIR = "$env:LOCALAPPDATA\\restic-cache-weekly"
+ Possible de changer le cache pour les weekly pour faire moins de dédupliquement : `$env:RESTIC_CACHE_DIR = "$env:LOCALAPPDATA\\restic-cache-weekly"`
 
 ```
 # Comptabilité Weekly
